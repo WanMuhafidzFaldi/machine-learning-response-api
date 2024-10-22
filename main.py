@@ -1,46 +1,50 @@
-import request as localRequests
-import extractor as localExtractor
-from IPython.display import display, HTML
-import pandas as pd
-# Example usage
-urls = [
-    'https://dummyjson.com/users/1',
-    'https://dummyjson.com/users/2',
-    'https://dummyjson.com/users/3'
-]
+import json 
+from sklearn.svm import LinearSVC  
+from sklearn.metrics import classification_report  
+from data_processing import dataProcessing
+from data_set import dataSet
+from machine_learning import machineLearning
+from machine_learning import predictPii
 
-responseData = localRequests.getListLogApi(urls)
+xTrain, xTest, yTrain, yTest, vectorizer = dataProcessing(dataSet)
 
-# Variable to store all extracted key-value pairs along with URLs
-all_extracted_items = []
-
-for url, (data, error) in zip(urls, responseData):
-    if error:
-        print(f"Error: {error}")
-    else:
-        # Extract all key-value pairs
-        extractedItems = localExtractor.extract_json(data)
-        all_extracted_items.append((url, extractedItems))
+model = machineLearning(xTrain, xTest, yTrain, yTest)
 
 
-# Create a list of dictionaries for the DataFrame
-data_for_df = []
-for url, extractedItems in all_extracted_items:
-    key_value_pairs = "<div style='text-align:left;'>" + "<br>".join([f"{key}: {value}" for key, value in extractedItems]) + "</div>"
-    data_for_df.append({'URL': url, 'KeyValuePairs': key_value_pairs})
 
-print (data_for_df)
+# # Contoh Penggunaan  
+new_response_1 = '''  
+{  
+  "products": [  
+    {  
+      "id": 101,  
+      "title": "Apple AirPods Max Silver",  
+      "category": "mobile-accessories"  
+    }  
+  ],  
+  "total": 23,  
+  "skip": 0,  
+  "limit": 23  
+}  
+'''  
 
+new_response_2 = '''  
+{  
+  "email": "asdfasdfdsfds",  
+  "fullName": "asdfasdf",  
+  "phoneNumber": "asdfasfdsfs",  
+  "products": [  
+    {  
+      "id": 101,  
+      "title": "Apple AirPods Max Silver",  
+      "category": "mobile-accessories"  
+    }  
+  ],  
+  "total": 23,  
+  "skip": 0,  
+  "limit": 23  
+}  
+''' 
 
-# # Create a list of dictionaries for the DataFrame
-# data_for_df = []
-# for url, extractedItems in all_extracted_items:
-#     key_value_pairs = "<div style='text-align:left;'>" + "<br>".join([f"{key}: {value}" for key, value in extractedItems]) + "</div>"
-#     data_for_df.append({'URL': url, 'KeyValuePairs': key_value_pairs})
-
-# # Create a pandas DataFrame
-# df = pd.DataFrame(data_for_df)
-
-# # Display the DataFrame with HTML rendering and left alignment for key-value pairs
-# html = df.to_html(escape=False)
-# display(HTML(html))
+print(predictPii(model, vectorizer, new_response_1))  # Output: Does not contain PII  
+print(predictPii(model, vectorizer, new_response_2))  # Output: Contains PII  
