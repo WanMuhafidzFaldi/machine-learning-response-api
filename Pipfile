@@ -17,4 +17,3 @@ python_full_version = "3.13.0"
 
 [scripts]
 start = "python main.py"
-example = "python pii_scoring.py"
