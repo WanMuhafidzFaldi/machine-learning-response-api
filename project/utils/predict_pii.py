@@ -1,20 +1,7 @@
-from sklearn.svm import LinearSVC  
-from sklearn.metrics import classification_report  
+
 import json
 
-def machineLearning(xTrain, xTest, yTrain, yTest):
-    # 5. Melatih Model SVM  
-    model = LinearSVC()  
-    model.fit(xTrain, yTrain)
-
-    # 6. Prediksi dan Evaluasi  
-    yPred = model.predict(xTest)  
-    print(classification_report(yTest, yPred, zero_division=0))  
-
-    return model
-
-
-# 7. Fungsi untuk Memprediksi PII dalam Respons API Baru  
+# 7. Fungsi untuk Memprediksi PII
 def predictPii(model, vectorizer, response):  
     try:  
         responseDict = json.loads(response)  

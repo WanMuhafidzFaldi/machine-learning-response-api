@@ -8,10 +8,11 @@ This project is designed to Machine Learning Response API Detection. It uses Pyt
 - `pip` (Python package installer)
 
 ## Depedencies
-- `requests`
-- `ipython`
-- `pandas`
+- `joblib`
+- `flask`
+- `pymongo`
 - `scikit-learn`
+- `python-dotenv`
 
 These dependencies are managed by `pipenv` and are specified in the `Pipfile`.
 

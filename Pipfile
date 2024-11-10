@@ -4,10 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = "*"
-ipython = "*"
-pandas = "*"
 scikit-learn = "*"
+joblib = "*"
+flask = "*"
+pymongo = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

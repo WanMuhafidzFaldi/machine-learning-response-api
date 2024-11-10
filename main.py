@@ -1,43 +1,10 @@
-from data_processing import dataProcessing
-from data_set import loadDataTraining
-from data_uji import loadDataTest
-from machine_learning import machineLearning
-from machine_learning import predictPii
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
+from flask import Flask
+from project.routes import register_routes
 
-filePathDataSet = 'dataset1.json'
-dataSet = loadDataTraining(filePathDataSet)
-xTrain, xTest, yTrain, yTest, vectorizer = dataProcessing(dataSet)
+app = Flask(__name__)
+app.config.from_object('project.config.Config')
 
-model = machineLearning(xTrain, xTest, yTrain, yTest)
+register_routes(app)
 
-# List untuk menyimpan hasil prediksi dan label sebenarnya
-yTrue = []
-yPred = []
-
-filePathDataTest = 'datauji1.json'
-dataTest = loadDataTest(filePathDataTest)
-for data in dataTest:
-    print("Data Uji: ", data['responseData'])
-    print("Scoring Seharusnya: ", data['scoringData'])
-    predict, textReport = predictPii(model, vectorizer, data['responseData'])  # Output: Does not contain PII
-    print("Hasil Prediksi: ", predict)
-    print("Text Report: ", textReport)
-    print("\n")
-
-    # Simpan hasil prediksi dan label sebenarnya
-    yTrue.append(data['scoringData'])
-    yPred.append(predict)
-
-# Hitung metrik-metrik
-accuracy = accuracy_score(yTrue, yPred)
-f1 = f1_score(yTrue, yPred, average='weighted')
-precision = precision_score(yTrue, yPred, average='weighted')
-recall = recall_score(yTrue, yPred, average='weighted')
-conf_matrix = confusion_matrix(yTrue, yPred)
-
-print(f"Akurasi: {accuracy}")
-print(f"F1-score: {f1}")
-print(f"Precision: {precision}")
-print(f"Recall: {recall}")
-print(f"Confusion Matrix: \n{conf_matrix}")
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=5000)
