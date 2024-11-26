@@ -9,6 +9,8 @@ joblib = "*"
 flask = "*"
 pymongo = "*"
 python-dotenv = "*"
+aws-lambda-powertools = "*"
+mangum = "*"
 
 [dev-packages]
 

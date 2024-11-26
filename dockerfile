@@ -1,26 +1,35 @@
-# Gunakan image Python sebagai base image
-FROM python:3.13
+# Use AWS Lambda Python 3.9 base image
+FROM public.ecr.aws/lambda/python:3.13
 
 # Set environment variable
 ENV PYTHONUNBUFFERED=1
 
-# Buat direktori kerja di dalam container
-WORKDIR /app
+# Set working directory
+WORKDIR /var/task
 
-# Salin file Pipfile dan Pipfile.lock ke dalam container
-COPY Pipfile Pipfile.lock /app/
+# Copy dependencies file
+COPY requirements.txt ./
 
-# Install pipenv dan dependencies dari Pipfile dengan timeout yang lebih tinggi
-RUN pip install pipenv --default-timeout=100 && pipenv install --deploy --ignore-pipfile --default-timeout=100
+# Install dependencies directly with pip
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Salin seluruh source code ke dalam container
-COPY . /app/
+# Copy the source code
+COPY . .
+COPY start.sh /var/task/start.sh
+RUN chmod +x /var/task/start.sh
 
-# Set environment variable untuk Flask
-ENV FLASK_APP=main.py
-
-# Expose port 5000
+# Expose port for EC2
 EXPOSE 5000
 
-# Jalankan aplikasi
-CMD ["pipenv", "run", "python", "main.py"]
+# Add AWS Lambda Runtime Interface Emulator
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/local/bin/aws-lambda-rie
+RUN chmod +x /usr/local/bin/aws-lambda-rie
+
+# Add an environment variable to control the mode
+ENV RUN_MODE=lambda
+
+# Use the startup script as the entrypoint
+ENTRYPOINT ["/var/task/start.sh"]
+
+# Specify the handler directly for Lambda runtime
+CMD ["main.lambda_handler"]
