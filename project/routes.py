@@ -50,7 +50,6 @@ def register_routes(app):
         log_usecase = LogUseCase(db)
         logs = log_usecase.get_predict_pii_naive_bayes()
         return jsonify(logs), 200
-    
 
     @app.route('/health', methods=['GET'])
     def health_check():
