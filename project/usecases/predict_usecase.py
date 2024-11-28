@@ -52,15 +52,15 @@ class PredictUseCase:
         else:
             severity = "Unknown"
 
-        saveData = self.detection_result_repository.save({
-            "model": "svm",
-            "endpoint": endpoint,
-            "authorization": authorization_exists,
-            "predict": predict,
-            "severity": severity,
-            "response": response,
-        })
-        print(saveData)
+        # saveData = self.detection_result_repository.save({
+        #     "model": "svm",
+        #     "endpoint": endpoint,
+        #     "authorization": authorization_exists,
+        #     "predict": predict,
+        #     "severity": severity,
+        #     "response": response,
+        # })
+        # print(saveData)
         
         # Prepare the result as a dictionary
         result = {
@@ -115,16 +115,16 @@ class PredictUseCase:
         else:
             severity = "Unknown"
 
-        saveData = self.detection_result_repository.save({
-            "model": "naive_bayes",
-            "endpoint": endpoint,
-            "authorization": authorization_exists,
-            "predict": predict,
-            "severity": severity,
-            "textReport": textReport,
-            "response": response,
-        })
-        print(saveData)
+        # saveData = self.detection_result_repository.save({
+        #     "model": "naive_bayes",
+        #     "endpoint": endpoint,
+        #     "authorization": authorization_exists,
+        #     "predict": predict,
+        #     "severity": severity,
+        #     "textReport": textReport,
+        #     "response": response,
+        # })
+        # print(saveData)
         
         # Prepare the result as a dictionary
         result = {
